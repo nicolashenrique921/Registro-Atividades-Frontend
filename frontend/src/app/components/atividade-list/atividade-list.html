@@ -1,0 +1,16 @@
+<div class="top-bar">
+  <h2>Atividades do Dia</h2>
+
+  <a routerLink="/App" class="btn-voltar">
+    ⬅ Voltar para Home
+  </a>
+</div>
+
+<ul>
+  @for (a of atividades; track a._id) {
+  <li>
+    <strong>{{ a.titulo }}</strong> - {{ a.descricao }}
+    <button (click)="remover(a._id!)">Excluir</button>
+  </li>
+  }
+</ul>
