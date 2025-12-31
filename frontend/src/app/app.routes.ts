@@ -4,7 +4,7 @@ import { AtividadeForm } from './components/atividade-form/atividade-form';
 import { App } from './app';
 
 export const routes: Routes = [
-  { path: 'App', component: App },
+  { path: '', redirectTo: 'atividades', pathMatch: 'full' },
   { path: 'AtividadeList', component: AtividadeList },
   { path: 'AtividadeForm', component: AtividadeForm }
 ];
