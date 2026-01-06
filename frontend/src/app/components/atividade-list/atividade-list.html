@@ -6,13 +6,48 @@
         <p>{{ atividade.descricao }}</p>
       </div>
 
-      <button (click)="remover(atividade._id!)">
-        Remover
-      </button>
+      <div class="acoes-lista">
+        <button
+          class="editar"
+          [routerLink]="['/atividades/editar', atividade._id]"
+        >
+          Editar
+        </button>
+
+        <button
+          class="excluir"
+          (click)="abrirConfirmacao(atividade)"
+        >
+          Excluir
+        </button>
+      </div>
     </li>
   }
 </ul>
 
 @if (!atividades.length) {
   <p class="vazio">Nenhuma atividade cadastrada.</p>
+}
+
+@if (confirmarExclusao) {
+  <div class="overlay">
+    <div class="modal">
+      <h3>Confirmar exclusão</h3>
+
+      <p>
+        Deseja realmente excluir a atividade
+        <strong>{{ atividadeSelecionada?.titulo }}</strong>?
+      </p>
+
+      <div class="acoes">
+        <button class="cancelar" (click)="cancelar()">
+          Cancelar
+        </button>
+
+        <button class="confirmar" (click)="confirmar()">
+          Excluir
+        </button>
+      </div>
+    </div>
+  </div>
 }

@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast-service';
-import { AtividadesService } from '../../services/atividades';
+import { AtividadesService, Atividade } from '../../services/atividades';
 
 @Component({
   selector: 'app-atividade-form',
@@ -12,18 +12,35 @@ import { AtividadesService } from '../../services/atividades';
   templateUrl: './atividade-form.html',
   styleUrl: './atividade-form.css'
 })
-export class AtividadeForm {
+export class AtividadeForm implements OnInit {
 
-  atividade = {
+  atividade: Atividade = {
     titulo: '',
     descricao: ''
   };
 
+  id?: string;
+
   constructor(
     private service: AtividadesService,
     private toast: ToastService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id') ?? undefined;
+
+    if (this.id) {
+      this.service.listar().subscribe({
+        next: atividades => {
+          const encontrada = atividades.find(a => a._id === this.id);
+          if (encontrada) this.atividade = encontrada;
+        },
+        error: () => this.toast.error('Erro ao carregar atividade.')
+      });
+    }
+  }
 
   salvar() {
     if (!this.atividade.titulo.trim()) {
@@ -31,14 +48,21 @@ export class AtividadeForm {
       return;
     }
 
-    this.service.criar(this.atividade).subscribe({
+    const operacao = this.id
+      ? this.service.atualizar(this.id, this.atividade)
+      : this.service.criar(this.atividade);
+
+    operacao.subscribe({
       next: () => {
-        this.toast.success('Atividade registrada com sucesso!');
-        this.atividade = { titulo: '', descricao: '' };
+        this.toast.success(
+          this.id
+            ? 'Atividade atualizada com sucesso!'
+            : 'Atividade registrada com sucesso!'
+        );
         this.router.navigate(['/atividades']);
       },
       error: () => {
-        this.toast.error('Erro ao registrar atividade.');
+        this.toast.error('Erro ao salvar atividade.');
       }
     });
   }

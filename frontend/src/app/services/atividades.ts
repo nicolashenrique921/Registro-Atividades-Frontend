@@ -62,4 +62,7 @@ export class AtividadesService {
       })
     );
   }
+  atualizar(id: string, atividade: Atividade): Observable<Atividade> {
+    return this.http.put<Atividade>(`${this.apiUrl}/${id}`, atividade);
+  }
 }

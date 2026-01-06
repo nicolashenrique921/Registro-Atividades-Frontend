@@ -1,20 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToastService } from '../../services/toast-service';
-import { AtividadesService, Atividade } from '../../services/atividades';
-import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+
+import { AtividadesService, Atividade } from '../../services/atividades';
+import { ToastService } from '../../services/toast-service';
 
 @Component({
   selector: 'app-atividade-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './atividade-list.html',
   styleUrl: './atividade-list.css'
 })
 export class AtividadeList implements OnInit {
 
   atividades: Atividade[] = [];
+
+  confirmarExclusao = false;
+  atividadeSelecionada?: Atividade;
 
   constructor(
     private service: AtividadesService,
@@ -32,13 +35,29 @@ export class AtividadeList implements OnInit {
     });
   }
 
-  remover(id: string) {
-    this.service.remover(id).subscribe({
+  abrirConfirmacao(atividade: Atividade) {
+    this.atividadeSelecionada = atividade;
+    this.confirmarExclusao = true;
+  }
+
+  cancelar() {
+    this.confirmarExclusao = false;
+    this.atividadeSelecionada = undefined;
+  }
+
+  confirmar() {
+    if (!this.atividadeSelecionada || !this.atividadeSelecionada._id) return;
+
+    this.service.remover(this.atividadeSelecionada._id).subscribe({
       next: () => {
         this.toast.success('Atividade removida com sucesso!');
         this.buscar();
+        this.cancelar();
       },
-      error: () => this.toast.error('Erro ao remover atividade.')
+      error: () => {
+        this.toast.error('Erro ao remover atividade.');
+        this.cancelar();
+      }
     });
   }
 }
