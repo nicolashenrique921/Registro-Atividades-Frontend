@@ -1,0 +1,39 @@
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 14px 22px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #010300;
+  z-index: 10000;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  animation: slideFade 3s ease forwards;
+}
+
+.toast.success {
+  background-color: #bbdec6;
+  border-left: 6px solid #5a7f78;
+}
+
+.toast.error {
+  background-color: #f7f8fc;
+  border-left: 6px solid #314c53;
+}
+
+@keyframes slideFade {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
