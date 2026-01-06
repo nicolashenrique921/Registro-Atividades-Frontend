@@ -6,15 +6,16 @@
 <header class="app-header">
     <h1>📋 Registro de Atividades</h1>
     <p>Organize suas tarefas diárias</p>
+</header>
+
+<main class="app-main">
+  <router-outlet></router-outlet>
 
   <nav class="menu">
     <a routerLink="/AtividadeList" routerLinkActive="active">Listar Atividades</a>
     <a routerLink="/AtividadeForm" routerLinkActive="active">Nova Atividade</a>
   </nav>
-</header>
 
-<main class="app-main">
-  <router-outlet></router-outlet>
 </main>
 
 <footer class="app-footer">

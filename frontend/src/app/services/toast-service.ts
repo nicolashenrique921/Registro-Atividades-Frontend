@@ -1,25 +1,31 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export type ToastType = 'success' | 'error';
+export type ToastType = 'success' | 'error' | 'info';
 
-export interface ToastMessage {
+export interface Toast {
   message: string;
   type: ToastType;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ToastService {
 
-  private toastSubject = new BehaviorSubject<ToastMessage | null>(null);
+  private toastSubject = new BehaviorSubject<Toast | null>(null);
   toast$ = this.toastSubject.asObservable();
 
-  showSuccess(message: string) {
+  success(message: string) {
     this.toastSubject.next({ message, type: 'success' });
   }
 
-  showError(message: string) {
+  error(message: string) {
     this.toastSubject.next({ message, type: 'error' });
+  }
+
+  info(message: string) {
+    this.toastSubject.next({ message, type: 'info' });
   }
 
   clear() {

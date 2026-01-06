@@ -1,15 +1,18 @@
-<h2>Atividades do Dia</h2>
+<ul class="lista">
+  @for (atividade of atividades; track atividade._id) {
+    <li class="item">
+      <div>
+        <strong>{{ atividade.titulo }}</strong>
+        <p>{{ atividade.descricao }}</p>
+      </div>
 
-<ul>
-  @for (a of atividades; track a._id) {
-    <li>
-      <strong>{{ a.titulo }}</strong>
-      <p>{{ a.descricao }}</p>
-
-      <button (click)="remover(a._id!)">Excluir</button>
+      <button (click)="remover(atividade._id!)">
+        Remover
+      </button>
     </li>
   }
 </ul>
 
-<a routerLink="/AtividadeForm" class="nova">+ Nova Atividade</a>
-<a routerLink="/atividades" class="voltar">← Voltar</a>
+@if (!atividades.length) {
+  <p class="vazio">Nenhuma atividade cadastrada.</p>
+}

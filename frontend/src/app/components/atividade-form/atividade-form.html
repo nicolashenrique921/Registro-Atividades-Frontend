@@ -1,18 +1,19 @@
-<h2>Nova Atividade</h2>
+<form (ngSubmit)="salvar()" class="form">
+  <input
+    type="text"
+    name="titulo"
+    [(ngModel)]="atividade.titulo"
+    placeholder="Título da atividade"
+    required
+  />
 
-<form (ngSubmit)="salvar()">
-  <input type="text"
-         placeholder="Título"
-         [(ngModel)]="atividade.titulo"
-         name="titulo"
-         required />
+  <textarea
+    name="descricao"
+    [(ngModel)]="atividade.descricao"
+    placeholder="Descrição"
+  ></textarea>
 
-  <textarea placeholder="Descrição"
-            [(ngModel)]="atividade.descricao"
-            name="descricao">
-  </textarea>
-
-  <button type="submit">Salvar</button>
-
-  <a routerLink="/atividades" class="voltar">← Voltar</a>
+  <button type="submit">
+    Salvar atividade
+  </button>
 </form>

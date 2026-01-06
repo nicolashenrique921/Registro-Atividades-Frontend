@@ -9,7 +9,6 @@ import { ToastService } from '../../services/toast-service';
   templateUrl: './toastcomponent.html',
   styleUrl: './toastcomponent.css'
 })
-
 export class ToastComponent {
 
   private toastService = inject(ToastService);

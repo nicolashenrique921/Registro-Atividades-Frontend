@@ -28,17 +28,17 @@ export class AtividadeList implements OnInit {
   buscar() {
     this.service.listar().subscribe({
       next: data => this.atividades = data,
-      error: () => this.toast.showError('Erro ao carregar atividades.')
+      error: () => this.toast.error('Erro ao carregar atividades.')
     });
   }
 
   remover(id: string) {
     this.service.remover(id).subscribe({
       next: () => {
-        this.toast.showSuccess('Atividade removida com sucesso!');
+        this.toast.success('Atividade removida com sucesso!');
         this.buscar();
       },
-      error: () => this.toast.showError('Erro ao remover atividade.')
+      error: () => this.toast.error('Erro ao remover atividade.')
     });
   }
 }

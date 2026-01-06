@@ -26,13 +26,19 @@ export class AtividadeForm {
   ) {}
 
   salvar() {
+    if (!this.atividade.titulo.trim()) {
+      this.toast.error('O título é obrigatório.');
+      return;
+    }
+
     this.service.criar(this.atividade).subscribe({
       next: () => {
-        this.toast.showSuccess('Atividade registrada com sucesso!');
+        this.toast.success('Atividade registrada com sucesso!');
+        this.atividade = { titulo: '', descricao: '' };
         this.router.navigate(['/atividades']);
       },
       error: () => {
-        this.toast.showError('Erro ao registrar atividade.');
+        this.toast.error('Erro ao registrar atividade.');
       }
     });
   }

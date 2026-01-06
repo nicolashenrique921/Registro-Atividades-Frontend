@@ -1,39 +1,34 @@
 .toast {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 24px;
+  right: 24px;
   padding: 14px 22px;
   border-radius: 8px;
+  color: #fff;
   font-weight: 500;
-  color: #010300;
-  z-index: 10000;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-  animation: slideFade 3s ease forwards;
+  animation: fadeIn 0.3s ease-in;
+  z-index: 1000;
 }
 
 .toast.success {
-  background-color: #bbdec6;
-  border-left: 6px solid #5a7f78;
+  background-color: #16a34a;
 }
 
 .toast.error {
-  background-color: #f7f8fc;
-  border-left: 6px solid #314c53;
+  background-color: #dc2626;
 }
 
-@keyframes slideFade {
-  0% {
+.toast.info {
+  background-color: #2563eb;
+}
+
+@keyframes fadeIn {
+  from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
-  10% {
+  to {
     opacity: 1;
     transform: translateY(0);
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
   }
 }
