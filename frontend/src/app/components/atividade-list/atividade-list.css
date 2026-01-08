@@ -1,163 +1,108 @@
-/* -----------------------------
-   LISTA PRINCIPAL
------------------------------ */
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.vazio {
+  text-align: center;
+  color: #777;
+}
 
 .lista {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 .item {
-  background: #ffffff;
-  border-radius: 6px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 14px;
+  margin-bottom: 12px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* Texto da atividade */
-.item strong {
-  font-size: 16px;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.item p {
-  margin: 0;
+.info p {
+  margin: 4px 0 0;
   color: #555;
-  font-size: 14px;
 }
 
-
-/* -----------------------------
-   AÇÕES (EDITAR / EXCLUIR)
------------------------------ */
-
-.acoes-lista {
+.acoes {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
-/* Botão editar */
 .editar {
-  background-color: #1976d2;
-  color: #fff;
-  border: none;
+  text-decoration: none;
   padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
+  background: #1976d2;
+  color: #fff;
+  border-radius: 6px;
 }
 
 .editar:hover {
-  background-color: #1565c0;
+  background: #125aa1;
 }
 
-/* Botão excluir */
 .excluir {
-  background-color: #e53935;
+  padding: 6px 12px;
+  background: #d32f2f;
   color: #fff;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
 }
 
 .excluir:hover {
-  background-color: #c62828;
+  background: #b71c1c;
 }
 
-
-/* -----------------------------
-   ESTADO VAZIO
------------------------------ */
-
-.vazio {
-  text-align: center;
-  margin-top: 24px;
-  color: #777;
-  font-style: italic;
-}
-
-
-/* -----------------------------
-   MODAL DE CONFIRMAÇÃO
------------------------------ */
+/* MODAL */
 
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgba(0,0,0,0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
-
-  z-index: 1000;
+  justify-content: center;
 }
 
 .modal {
   background: #fff;
   padding: 24px;
-  border-radius: 6px;
-  width: 90%;
-  max-width: 400px;
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  width: 320px;
+  text-align: center;
 }
 
-.modal h3 {
-  margin-top: 0;
-  margin-bottom: 12px;
-}
-
-.modal p {
-  margin-bottom: 20px;
-}
-
-
-/* -----------------------------
-   BOTÕES DO MODAL
------------------------------ */
-
-.acoes {
+.modal-acoes {
+  margin-top: 20px;
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: space-between;
 }
 
 .cancelar {
-  background: #9e9e9e;
-  color: #fff;
+  background: #e0e0e0;
   border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
-}
-
-.cancelar:hover {
-  background: #757575;
 }
 
 .confirmar {
-  background: #e53935;
+  background: #d32f2f;
   color: #fff;
   border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
-}
-
-.confirmar:hover {
-  background: #c62828;
 }

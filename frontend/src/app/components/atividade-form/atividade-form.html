@@ -1,4 +1,5 @@
 <div class="container">
+
   <h2>
     {{ editando ? 'Editar atividade' : 'Nova atividade' }}
   </h2>
@@ -12,7 +13,6 @@
         [(ngModel)]="atividade.titulo"
         name="titulo"
         required
-        placeholder="Digite o título"
       />
     </label>
 
@@ -22,19 +22,12 @@
         [(ngModel)]="atividade.descricao"
         name="descricao"
         rows="4"
-        placeholder="Descrição opcional"
       ></textarea>
     </label>
 
     <div class="acoes">
-      <button
-        type="submit"
-        [disabled]="salvando"
-        class="salvar"
-      >
-        {{ salvando
-            ? 'Salvando...'
-            : (editando ? 'Atualizar' : 'Salvar') }}
+      <button type="submit" class="salvar">
+        {{ editando ? 'Atualizar' : 'Salvar' }}
       </button>
 
       <a routerLink="/atividades" class="cancelar">
@@ -43,4 +36,5 @@
     </div>
 
   </form>
+
 </div>

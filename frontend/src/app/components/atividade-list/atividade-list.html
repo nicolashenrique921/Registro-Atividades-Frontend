@@ -1,45 +1,54 @@
-<ul class="lista">
-  @for (atividade of atividades; track atividade._id) {
-    <li class="item">
-      <div>
-        <strong>{{ atividade.titulo }}</strong>
-        <p>{{ atividade.descricao }}</p>
-      </div>
+<div class="container">
 
-      <div class="acoes-lista">
-        <button
-          class="editar"
-          [routerLink]="['/atividades/editar', atividade._id]"
-        >
-          Editar
-        </button>
+  <h2>Atividades</h2>
 
-        <button
-          class="excluir"
-          (click)="abrirConfirmacao(atividade)"
-        >
-          Excluir
-        </button>
-      </div>
-    </li>
+  @if (atividades.length === 0) {
+    <p class="vazio">Nenhuma atividade cadastrada.</p>
   }
-</ul>
 
-@if (!atividades.length) {
-  <p class="vazio">Nenhuma atividade cadastrada.</p>
-}
+  <ul class="lista">
+    @for (atividade of atividades; track atividade._id) {
+      <li class="item">
 
-@if (confirmarExclusao) {
+        <div class="info">
+          <strong>{{ atividade.titulo }}</strong>
+          <p>{{ atividade.descricao }}</p>
+        </div>
+
+        <div class="acoes">
+          <a
+            class="editar"
+            [routerLink]="['/atividades/editar', atividade._id]"
+          >
+            Editar
+          </a>
+
+          <button
+            class="excluir"
+            (click)="abrirConfirmacao(atividade)"
+          >
+            Excluir
+          </button>
+        </div>
+
+      </li>
+    }
+  </ul>
+
+</div>
+
+<!-- MODAL DE CONFIRMAÇÃO -->
+@if (confirmarExclusao && atividadeSelecionada) {
   <div class="overlay">
     <div class="modal">
       <h3>Confirmar exclusão</h3>
 
       <p>
         Deseja realmente excluir a atividade
-        <strong>{{ atividadeSelecionada?.titulo }}</strong>?
+        <strong>{{ atividadeSelecionada.titulo }}</strong>?
       </p>
 
-      <div class="acoes">
+      <div class="modal-acoes">
         <button class="cancelar" (click)="cancelar()">
           Cancelar
         </button>

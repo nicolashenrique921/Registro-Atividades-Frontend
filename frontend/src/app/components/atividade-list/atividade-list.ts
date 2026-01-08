@@ -17,7 +17,7 @@ export class AtividadeList implements OnInit {
   atividades: Atividade[] = [];
 
   confirmarExclusao = false;
-  atividadeSelecionada?: Atividade;
+  atividadeSelecionada: Atividade | null = null;
 
   constructor(
     private service: AtividadesService,
@@ -42,11 +42,11 @@ export class AtividadeList implements OnInit {
 
   cancelar() {
     this.confirmarExclusao = false;
-    this.atividadeSelecionada = undefined;
+    this.atividadeSelecionada = null;
   }
 
   confirmar() {
-    if (!this.atividadeSelecionada || !this.atividadeSelecionada._id) return;
+    if (!this.atividadeSelecionada?._id) return;
 
     this.service.remover(this.atividadeSelecionada._id).subscribe({
       next: () => {

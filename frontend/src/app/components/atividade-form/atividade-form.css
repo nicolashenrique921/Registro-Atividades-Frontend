@@ -1,22 +1,22 @@
 .container {
-  max-width: 500px;
+  max-width: 520px;
   margin: 40px auto;
   padding: 24px;
   background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   text-align: center;
 }
 
 label {
   display: flex;
   flex-direction: column;
-  font-weight: 500;
   margin-bottom: 16px;
+  font-weight: 600;
 }
 
 input,
@@ -37,25 +37,30 @@ textarea:focus {
 .acoes {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
-button.salvar {
-  background-color: #1976d2;
+.salvar {
+  background: #1976d2;
   color: #fff;
-  border: none;
   padding: 10px 18px;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
 }
 
-button.salvar:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.salvar:hover {
+  background: #135ba1;
 }
 
-a.cancelar {
+.cancelar {
   text-decoration: none;
-  color: #555;
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: #e0e0e0;
+  color: #333;
+}
+
+.cancelar:hover {
+  background: #cfcfcf;
 }
