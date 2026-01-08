@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
+
 import { LoaderService } from './loader';
 import { ToastService } from './toast-service';
 
@@ -37,6 +38,18 @@ export class AtividadesService {
     );
   }
 
+  buscarPorId(id: string): Observable<Atividade> {
+  this.loader.show();
+
+  return this.http.get<Atividade>(`${this.apiUrl}/${id}`).pipe(
+    finalize(() => this.loader.hide()),
+    catchError(err => {
+      this.toast.error('Erro ao carregar atividade');
+      return throwError(() => err);
+    })
+  );
+}
+
   criar(atividade: Atividade): Observable<Atividade> {
     this.loader.show();
 
@@ -45,6 +58,19 @@ export class AtividadesService {
       finalize(() => this.loader.hide()),
       catchError(err => {
         this.toast.error('Erro ao criar atividade');
+        return throwError(() => err);
+      })
+    );
+  }
+
+  atualizar(id: string, atividade: Atividade): Observable<Atividade> {
+    this.loader.show();
+
+    return this.http.put<Atividade>(`${this.apiUrl}/${id}`, atividade).pipe(
+      tap(() => this.toast.success('Atividade atualizada com sucesso')),
+      finalize(() => this.loader.hide()),
+      catchError(err => {
+        this.toast.error('Erro ao atualizar atividade');
         return throwError(() => err);
       })
     );
@@ -61,8 +87,5 @@ export class AtividadesService {
         return throwError(() => err);
       })
     );
-  }
-  atualizar(id: string, atividade: Atividade): Observable<Atividade> {
-    return this.http.put<Atividade>(`${this.apiUrl}/${id}`, atividade);
   }
 }

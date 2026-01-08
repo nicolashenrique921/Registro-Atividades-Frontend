@@ -1,23 +1,46 @@
-<h2>
-  {{ id ? 'Editar atividade' : 'Nova atividade' }}
-</h2>
+<div class="container">
+  <h2>
+    {{ editando ? 'Editar atividade' : 'Nova atividade' }}
+  </h2>
 
-<form (ngSubmit)="salvar()" class="form">
-  <input
-    type="text"
-    name="titulo"
-    [(ngModel)]="atividade.titulo"
-    placeholder="Título"
-    required
-  />
+  <form (ngSubmit)="salvar()">
 
-  <textarea
-    name="descricao"
-    [(ngModel)]="atividade.descricao"
-    placeholder="Descrição"
-  ></textarea>
+    <label>
+      Título
+      <input
+        type="text"
+        [(ngModel)]="atividade.titulo"
+        name="titulo"
+        required
+        placeholder="Digite o título"
+      />
+    </label>
 
-  <button type="submit">
-    {{ id ? 'Atualizar' : 'Salvar' }}
-  </button>
-</form>
+    <label>
+      Descrição
+      <textarea
+        [(ngModel)]="atividade.descricao"
+        name="descricao"
+        rows="4"
+        placeholder="Descrição opcional"
+      ></textarea>
+    </label>
+
+    <div class="acoes">
+      <button
+        type="submit"
+        [disabled]="salvando"
+        class="salvar"
+      >
+        {{ salvando
+            ? 'Salvando...'
+            : (editando ? 'Atualizar' : 'Salvar') }}
+      </button>
+
+      <a routerLink="/atividades" class="cancelar">
+        Cancelar
+      </a>
+    </div>
+
+  </form>
+</div>

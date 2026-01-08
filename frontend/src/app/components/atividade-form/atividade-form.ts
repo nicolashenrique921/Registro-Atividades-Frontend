@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+
 import { ToastService } from '../../services/toast-service';
 import { AtividadesService, Atividade } from '../../services/atividades';
 
@@ -20,6 +20,11 @@ export class AtividadeForm implements OnInit {
   };
 
   id?: string;
+  salvando = false;
+
+  get editando(): boolean {
+    return !!this.id;
+  }
 
   constructor(
     private service: AtividadesService,
@@ -35,7 +40,9 @@ export class AtividadeForm implements OnInit {
       this.service.listar().subscribe({
         next: atividades => {
           const encontrada = atividades.find(a => a._id === this.id);
-          if (encontrada) this.atividade = encontrada;
+          if (encontrada) {
+            this.atividade = { ...encontrada };
+          }
         },
         error: () => this.toast.error('Erro ao carregar atividade.')
       });
@@ -48,14 +55,16 @@ export class AtividadeForm implements OnInit {
       return;
     }
 
-    const operacao = this.id
-      ? this.service.atualizar(this.id, this.atividade)
+    this.salvando = true;
+
+    const operacao = this.editando
+      ? this.service.atualizar(this.id!, this.atividade)
       : this.service.criar(this.atividade);
 
     operacao.subscribe({
       next: () => {
         this.toast.success(
-          this.id
+          this.editando
             ? 'Atividade atualizada com sucesso!'
             : 'Atividade registrada com sucesso!'
         );
@@ -63,6 +72,9 @@ export class AtividadeForm implements OnInit {
       },
       error: () => {
         this.toast.error('Erro ao salvar atividade.');
+      },
+      complete: () => {
+        this.salvando = false;
       }
     });
   }

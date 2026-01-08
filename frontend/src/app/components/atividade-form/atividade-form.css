@@ -1,27 +1,61 @@
-.form {
+.container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+label {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  font-weight: 500;
+  margin-bottom: 16px;
 }
 
 input,
 textarea {
+  margin-top: 6px;
   padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
   font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-button {
-  background-color: #2563eb;
-  color: white;
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.acoes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+button.salvar {
+  background-color: #1976d2;
+  color: #fff;
   border: none;
-  padding: 10px;
+  padding: 10px 18px;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
 }
 
-button:hover {
-  background-color: #1e40af;
+button.salvar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+a.cancelar {
+  text-decoration: none;
+  color: #555;
 }
