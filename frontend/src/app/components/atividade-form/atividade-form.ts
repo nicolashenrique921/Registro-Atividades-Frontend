@@ -3,8 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { AtividadesService, Atividade } from '../../services/atividades';
 import { ToastService } from '../../services/toast-service';
+import { AtividadesService, Atividade } from '../../services/atividades';
 
 @Component({
   selector: 'app-atividade-form',
@@ -21,7 +21,17 @@ export class AtividadeForm implements OnInit {
   };
 
   id?: string;
-  editando = false;
+
+  submitted = false;
+
+  tituloTouched = false;
+  descricaoTouched = false;
+
+  readonly LIMITES = {
+    tituloMin: 3,
+    tituloMax: 60,
+    descricaoMax: 300
+  };
 
   constructor(
     private service: AtividadesService,
@@ -34,57 +44,56 @@ export class AtividadeForm implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id') ?? undefined;
 
     if (this.id) {
-      this.editando = true;
-      this.carregarAtividade();
+      this.service.listar().subscribe({
+        next: atividades => {
+          const encontrada = atividades.find(a => a._id === this.id);
+          if (encontrada) this.atividade = encontrada;
+        },
+        error: () => this.toast.error('Erro ao carregar atividade.')
+      });
     }
-  }
-
-  carregarAtividade() {
-    this.service.listar().subscribe({
-      next: atividades => {
-        const encontrada = atividades.find(a => a._id === this.id);
-
-        if (!encontrada) {
-          this.toast.error('Atividade não encontrada.');
-          this.router.navigate(['/atividades']);
-          return;
-        }
-
-        this.atividade = {
-          titulo: encontrada.titulo,
-          descricao: encontrada.descricao
-        };
-      },
-      error: () => {
-        this.toast.error('Erro ao carregar atividade.');
-        this.router.navigate(['/atividades']);
-      }
-    });
   }
 
   salvar() {
-    if (!this.atividade.titulo.trim()) {
-      this.toast.error('O título é obrigatório.');
+    this.submitted = true;
+
+    if (!this.formValido()) {
+      this.toast.error('Corrija os erros antes de salvar.');
       return;
     }
 
-    const requisicao = this.editando && this.id
+    const operacao = this.id
       ? this.service.atualizar(this.id, this.atividade)
       : this.service.criar(this.atividade);
 
-    requisicao.subscribe({
+    operacao.subscribe({
       next: () => {
         this.toast.success(
-          this.editando
+          this.id
             ? 'Atividade atualizada com sucesso!'
             : 'Atividade registrada com sucesso!'
         );
         this.router.navigate(['/atividades']);
       },
-      error: () => {
-        this.toast.error('Erro ao salvar atividade.');
-      }
+      error: () => this.toast.error('Erro ao salvar atividade.')
     });
   }
-  
+
+  // ---------- Validações ----------
+
+  tituloInvalido(): boolean {
+    const t = this.atividade.titulo.trim();
+    return (
+      t.length < this.LIMITES.tituloMin ||
+      t.length > this.LIMITES.tituloMax
+    );
+  }
+
+  descricaoInvalida(): boolean {
+    return this.atividade.descricao.length > this.LIMITES.descricaoMax;
+  }
+
+  formValido(): boolean {
+    return !this.tituloInvalido() && !this.descricaoInvalida();
+  }
 }

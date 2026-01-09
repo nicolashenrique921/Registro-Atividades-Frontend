@@ -1,40 +1,58 @@
-<div class="container">
+<form class="form" (ngSubmit)="salvar()" novalidate>
 
-  <h2>
-    {{ editando ? 'Editar atividade' : 'Nova atividade' }}
-  </h2>
+  <!-- TÍTULO -->
+  <div class="campo">
+  <label for="titulo">Título</label>
 
-  <form (ngSubmit)="salvar()">
+  <input
+    id="titulo"
+    type="text"
+    [(ngModel)]="atividade.titulo"
+    name="titulo"
+    (blur)="tituloTouched = true"
+    [class.invalido]="(tituloTouched || submitted) && tituloInvalido()"
+    [class.valido]="tituloTouched && !tituloInvalido()"
+    placeholder="Ex: Estudar Angular"
+  />
 
-    <label>
-      Título
-      <input
-        type="text"
-        [(ngModel)]="atividade.titulo"
-        name="titulo"
-        required
-      />
-    </label>
-
-    <label>
-      Descrição
-      <textarea
-        [(ngModel)]="atividade.descricao"
-        name="descricao"
-        rows="4"
-      ></textarea>
-    </label>
-
-    <div class="acoes">
-      <button type="submit" class="salvar">
-        {{ editando ? 'Atualizar' : 'Salvar' }}
-      </button>
-
-      <a routerLink="/atividades" class="cancelar">
-        Cancelar
-      </a>
-    </div>
-
-  </form>
-
+  @if ((tituloTouched || submitted) && tituloInvalido()) {
+    <small class="erro">
+      O título deve ter entre {{ LIMITES.tituloMin }} e {{ LIMITES.tituloMax }} caracteres.
+    </small>
+  }
 </div>
+
+  <!-- DESCRIÇÃO -->
+  <div class="campo">
+  <label for="descricao">Descrição</label>
+
+  <textarea
+    id="descricao"
+    [(ngModel)]="atividade.descricao"
+    name="descricao"
+    rows="4"
+    (blur)="descricaoTouched = true"
+    [class.invalido]="descricaoTouched && descricaoInvalida()"
+    [class.valido]="descricaoTouched && !descricaoInvalida()"
+    placeholder="Descreva a atividade (opcional)"
+  ></textarea>
+
+  @if (descricaoTouched && descricaoInvalida()) {
+    <small class="erro">
+      A descrição pode ter no máximo {{ LIMITES.descricaoMax }} caracteres.
+    </small>
+  }
+</div>
+
+  <!-- AÇÕES -->
+  <div class="acoes">
+    <button type="submit" class="salvar">
+      {{ id ? 'Atualizar' : 'Salvar' }}
+    </button>
+
+    <a routerLink="/atividades" class="cancelar">
+      Cancelar
+    </a>
+  </div>
+
+</form>
