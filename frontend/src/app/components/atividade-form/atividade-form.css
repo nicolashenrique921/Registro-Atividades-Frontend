@@ -1,14 +1,24 @@
-.form-container {
-  max-width: 520px;
-  margin: auto;
-  background: #f7f8fc;
-  padding: 2rem;
+form {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #ffffff;
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.campo {
+  margin-bottom: 1.2rem;
 }
 
 label {
   display: block;
-  margin-top: 1rem;
+  margin-bottom: 0.3rem;
   font-weight: 600;
 }
 
@@ -16,40 +26,51 @@ input,
 textarea {
   width: 100%;
   padding: 0.6rem;
-  margin-top: 0.3rem;
-  border: 1px solid #ccc;
   border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
 }
 
-input.erro,
-textarea.erro {
-  border-color: #c0392b;
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
 }
 
-.erro-msg {
-  color: #c0392b;
-  font-size: 0.85rem;
+.invalido {
+  border-color: #dc2626;
+  background: #fef2f2;
 }
 
-.info {
-  color: #314c53;
-  font-size: 0.85rem;
+.erro {
+  color: #dc2626;
+  font-size: 0.8rem;
 }
 
 .acoes {
-  margin-top: 1.5rem;
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
 button {
-  background: #314c53;
-  color: white;
+  padding: 0.6rem 1.2rem;
+  background: #2563eb;
+  color: #fff;
   border: none;
-  padding: 0.6rem 1.4rem;
   border-radius: 4px;
+  cursor: pointer;
 }
 
-button:disabled {
-  background: #999;
+button:hover {
+  background: #1d4ed8;
+}
+
+.cancelar {
+  text-decoration: none;
+  color: #374151;
+}
+
+.cancelar:hover {
+  text-decoration: underline;
 }

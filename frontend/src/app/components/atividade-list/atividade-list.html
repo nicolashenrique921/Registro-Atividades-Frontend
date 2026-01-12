@@ -1,6 +1,12 @@
-<div class="container">
+<section class="lista-container">
 
-  <h2>Atividades</h2>
+  <header class="topo">
+    <h2>Atividades</h2>
+
+    <a routerLink="/atividades/nova" class="novo">
+      Nova atividade
+    </a>
+  </header>
 
   @if (atividades.length === 0) {
     <p class="vazio">Nenhuma atividade cadastrada.</p>
@@ -9,35 +15,33 @@
   <ul class="lista">
     @for (atividade of atividades; track atividade._id) {
       <li class="item">
-
-        <div class="info">
+        <div class="conteudo">
           <strong>{{ atividade.titulo }}</strong>
           <p>{{ atividade.descricao }}</p>
         </div>
 
         <div class="acoes">
           <a
-            class="editar"
             [routerLink]="['/atividades/editar', atividade._id]"
+            class="editar"
           >
             Editar
           </a>
 
           <button
-            class="excluir"
+            class="remover"
             (click)="abrirConfirmacao(atividade)"
           >
-            Excluir
+            Remover
           </button>
         </div>
-
       </li>
     }
   </ul>
 
-</div>
+</section>
 
-<!-- MODAL DE CONFIRMAÇÃO -->
+<!-- MODAL CONFIRMAÇÃO -->
 @if (confirmarExclusao && atividadeSelecionada) {
   <div class="overlay">
     <div class="modal">
@@ -48,7 +52,7 @@
         <strong>{{ atividadeSelecionada.titulo }}</strong>?
       </p>
 
-      <div class="modal-acoes">
+      <div class="acoes-modal">
         <button class="cancelar" (click)="cancelar()">
           Cancelar
         </button>

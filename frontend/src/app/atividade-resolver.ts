@@ -1,9 +1,24 @@
 import { inject } from '@angular/core';
-import { ResolveFn } from '@angular/router';
-import { AtividadesService } from '../app/services/atividades';
+import { ResolveFn, ActivatedRouteSnapshot } from '@angular/router';
+import { AtividadesService, Atividade } from './services/atividades';
+import { Observable, map } from 'rxjs';
 
-export const atividadeResolver: ResolveFn<any> = (route) => {
-  const service = inject(AtividadesService);
-  const id = route.paramMap.get('id')!;
-  return service.buscarPorId(id);
-};
+export const atividadeResolver: ResolveFn<Atividade | undefined> =
+  (route: ActivatedRouteSnapshot): Observable<Atividade | undefined> => {
+
+    const service = inject(AtividadesService);
+    const id = route.paramMap.get('id');
+
+    if (!id) {
+      return new Observable<undefined>(observer => {
+        observer.next(undefined);
+        observer.complete();
+      });
+    }
+
+    return service.listar().pipe(
+      map(atividades =>
+        atividades.find(atividade => atividade._id === id)
+      )
+    );
+  };

@@ -1,58 +1,64 @@
-<div class="form-container">
+<form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
 
   <h2>{{ id ? 'Editar atividade' : 'Nova atividade' }}</h2>
 
-  <form (ngSubmit)="salvar()">
-
-    <!-- TÍTULO -->
+  <!-- TÍTULO -->
+  <div class="campo">
     <label for="titulo">Título</label>
+
     <input
       id="titulo"
       type="text"
-      name="titulo"
-      [(ngModel)]="atividade.titulo"
-      (blur)="tituloTouched = true; validarTitulo()"
-      [class.erro]="tituloInvalido || tituloDuplicado"
-      placeholder="Ex: Reunião com equipe"
+      formControlName="titulo"
+      placeholder="Digite o título"
+      [class.invalido]="titulo?.invalid && (titulo?.touched || submetido)"
     />
 
-    @if (tituloInvalido) {
-      <small class="erro-msg">Título é obrigatório.</small>
-    }
+    <small class="erro"
+      *ngIf="titulo?.errors && (titulo?.touched || submetido)"
+    >
+      <span *ngIf="titulo?.errors?.['required']">
+        O título é obrigatório.
+      </span>
+      <span *ngIf="titulo?.errors?.['minlength']">
+        Mínimo de 3 caracteres.
+      </span>
+    </small>
+  </div>
 
-    @if (validandoTitulo) {
-      <small class="info">Validando título...</small>
-    }
-
-    @if (tituloDuplicado) {
-      <small class="erro-msg">Título já existe.</small>
-    }
-
-    <!-- DESCRIÇÃO -->
+  <!-- DESCRIÇÃO -->
+  <div class="campo">
     <label for="descricao">Descrição</label>
+
     <textarea
       id="descricao"
-      name="descricao"
-      [(ngModel)]="atividade.descricao"
-      (blur)="descricaoTouched = true"
-      placeholder="Descreva a atividade..."
+      rows="4"
+      formControlName="descricao"
+      placeholder="Descreva a atividade"
+      [class.invalido]="descricao?.invalid && (descricao?.touched || submetido)"
     ></textarea>
 
-    @if (descricaoInvalida) {
-      <small class="erro-msg">Máximo de 500 caracteres.</small>
-    }
+    <small class="erro"
+      *ngIf="descricao?.errors && (descricao?.touched || submetido)"
+    >
+      <span *ngIf="descricao?.errors?.['required']">
+        A descrição é obrigatória.
+      </span>
+      <span *ngIf="descricao?.errors?.['minlength']">
+        Mínimo de 10 caracteres.
+      </span>
+    </small>
+  </div>
 
-    <!-- AÇÕES -->
-    <div class="acoes">
-      <button
-        type="submit"
-        [disabled]="salvando || tituloDuplicado || validandoTitulo"
-      >
-        {{ salvando ? 'Salvando...' : 'Salvar' }}
-      </button>
+  <!-- AÇÕES -->
+  <div class="acoes">
+    <button type="submit">
+      {{ id ? 'Atualizar' : 'Salvar' }}
+    </button>
 
-      <a routerLink="/atividades">Cancelar</a>
-    </div>
+    <a routerLink="/atividades" class="cancelar">
+      Cancelar
+    </a>
+  </div>
 
-  </form>
-</div>
+</form>

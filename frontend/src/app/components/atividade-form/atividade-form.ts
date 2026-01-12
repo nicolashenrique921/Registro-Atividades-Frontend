@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AtividadesService, Atividade } from '../../services/atividades';
 import { ToastService } from '../../services/toast-service';
@@ -8,107 +9,85 @@ import { ToastService } from '../../services/toast-service';
 @Component({
   selector: 'app-atividade-form',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink
+  ],
   templateUrl: './atividade-form.html',
   styleUrl: './atividade-form.css'
 })
 export class AtividadeForm implements OnInit {
 
-  atividade: Atividade = {
-    titulo: '',
-    descricao: ''
-  };
-
+  form!: FormGroup;
   id?: string;
-  salvando = false;
-
-  // UX
-  tituloTouched = false;
-  descricaoTouched = false;
-
-  // Validação assíncrona
-  tituloDuplicado = false;
-  validandoTitulo = false;
+  submetido = false;
 
   constructor(
+    private fb: FormBuilder,
     private service: AtividadesService,
     private toast: ToastService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      titulo: ['', [Validators.required, Validators.minLength(3)]],
+      descricao: ['', [Validators.required, Validators.minLength(10)]]
+    });
+
     this.id = this.route.snapshot.paramMap.get('id') ?? undefined;
 
-    const atividadeResolvida = this.route.snapshot.data['atividade'];
-    if (atividadeResolvida) {
-      this.atividade = atividadeResolvida;
+    if (this.id) {
+      this.service.listar().subscribe({
+        next: atividades => {
+          const atividade = atividades.find(a => a._id === this.id);
+          if (atividade) {
+            this.form.patchValue({
+              titulo: atividade.titulo,
+              descricao: atividade.descricao
+            });
+          }
+        },
+        error: () => this.toast.error('Erro ao carregar atividade.')
+      });
     }
   }
 
-  get tituloInvalido() {
-    return this.tituloTouched && !this.atividade.titulo.trim();
+  // 🔹 Getters tipados (RESOLVEM erro 4111)
+  get titulo() {
+    return this.form.get('titulo');
   }
 
-  get descricaoInvalida() {
-    return this.descricaoTouched && this.atividade.descricao.length > 500;
+  get descricao() {
+    return this.form.get('descricao');
   }
 
-  validarTitulo() {
-    if (!this.atividade.titulo.trim()) return;
+  salvar(): void {
+    this.submetido = true;
 
-    this.validandoTitulo = true;
-    this.tituloDuplicado = false;
-
-    this.service.validarTitulo(this.atividade.titulo, this.id).subscribe({
-      next: duplicado => {
-        this.tituloDuplicado = duplicado;
-        this.validandoTitulo = false;
-      },
-      error: () => {
-        this.validandoTitulo = false;
-      }
-    });
-  }
-
-  salvar() {
-    this.tituloTouched = true;
-    this.descricaoTouched = true;
-
-    if (
-      this.tituloInvalido ||
-      this.descricaoInvalida ||
-      this.tituloDuplicado
-    ) {
-      this.toast.error('Corrija os erros antes de salvar.');
+    if (this.form.invalid) {
+      this.toast.error('Corrija os erros do formulário.');
       return;
     }
 
-    this.salvando = true;
+    const atividade: Atividade = this.form.value;
 
-    const request$ = this.id
-      ? this.service.atualizar(this.id, this.atividade)
-      : this.service.criar(this.atividade);
+    const request = this.id
+      ? this.service.atualizar(this.id, atividade)
+      : this.service.criar(atividade);
 
-    request$.subscribe({
+    request.subscribe({
       next: () => {
         this.toast.success(
-          this.id ? 'Atividade atualizada!' : 'Atividade criada!'
+          this.id
+            ? 'Atividade atualizada com sucesso!'
+            : 'Atividade criada com sucesso!'
         );
         this.router.navigate(['/atividades']);
       },
-      error: () => {
-        this.toast.error('Erro ao salvar.');
-        this.salvando = false;
-      }
+      error: () => this.toast.error('Erro ao salvar atividade.')
     });
-  }
-
-  // 🔒 Usado pelo CanDeactivate
-  podeSair(): boolean {
-    return (
-      !this.atividade.titulo ||
-      confirm('Você tem alterações não salvas. Deseja sair?')
-    );
   }
 }

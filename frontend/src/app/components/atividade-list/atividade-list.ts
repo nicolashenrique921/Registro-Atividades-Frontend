@@ -17,35 +17,35 @@ export class AtividadeList implements OnInit {
   atividades: Atividade[] = [];
 
   confirmarExclusao = false;
-  atividadeSelecionada: Atividade | null = null;
+  atividadeSelecionada?: Atividade;
 
   constructor(
     private service: AtividadesService,
     private toast: ToastService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.buscar();
   }
 
-  buscar() {
+  buscar(): void {
     this.service.listar().subscribe({
       next: data => this.atividades = data,
       error: () => this.toast.error('Erro ao carregar atividades.')
     });
   }
 
-  abrirConfirmacao(atividade: Atividade) {
+  abrirConfirmacao(atividade: Atividade): void {
     this.atividadeSelecionada = atividade;
     this.confirmarExclusao = true;
   }
 
-  cancelar() {
+  cancelar(): void {
     this.confirmarExclusao = false;
-    this.atividadeSelecionada = null;
+    this.atividadeSelecionada = undefined;
   }
 
-  confirmar() {
+  confirmar(): void {
     if (!this.atividadeSelecionada?._id) return;
 
     this.service.remover(this.atividadeSelecionada._id).subscribe({

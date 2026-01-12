@@ -1,76 +1,93 @@
-.container {
+.lista-container {
   max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: 2rem auto;
+  padding: 1rem;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.novo {
+  text-decoration: none;
+  background: #2563eb;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+}
+
+.novo:hover {
+  background: #1d4ed8;
 }
 
 .vazio {
   text-align: center;
-  color: #777;
+  color: #6b7280;
 }
 
 .lista {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 14px;
-  margin-bottom: 12px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  align-items: flex-start;
+  padding: 0.8rem;
+  margin-bottom: 0.6rem;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.info p {
-  margin: 4px 0 0;
-  color: #555;
+.conteudo strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.conteudo p {
+  margin: 0.3rem 0 0;
+  color: #374151;
 }
 
 .acoes {
   display: flex;
-  gap: 10px;
+  gap: 0.5rem;
 }
 
 .editar {
   text-decoration: none;
-  padding: 6px 12px;
-  background: #1976d2;
-  color: #fff;
-  border-radius: 6px;
+  color: #2563eb;
+  font-size: 0.9rem;
 }
 
 .editar:hover {
-  background: #125aa1;
+  text-decoration: underline;
 }
 
-.excluir {
-  padding: 6px 12px;
-  background: #d32f2f;
+.remover {
+  background: #dc2626;
   color: #fff;
   border: none;
-  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-.excluir:hover {
-  background: #b71c1c;
+.remover:hover {
+  background: #b91c1c;
 }
 
 /* MODAL */
-
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,31 +95,30 @@ h2 {
 
 .modal {
   background: #fff;
-  padding: 24px;
+  padding: 1.5rem;
   border-radius: 8px;
-  width: 320px;
-  text-align: center;
+  width: 90%;
+  max-width: 400px;
 }
 
-.modal-acoes {
-  margin-top: 20px;
+.acoes-modal {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .cancelar {
-  background: #e0e0e0;
+  background: #e5e7eb;
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
 }
 
 .confirmar {
-  background: #d32f2f;
+  background: #dc2626;
   color: #fff;
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
 }
