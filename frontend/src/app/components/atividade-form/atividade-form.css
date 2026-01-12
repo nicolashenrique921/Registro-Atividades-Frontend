@@ -1,68 +1,55 @@
-form {
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.campo {
-  margin-bottom: 1.2rem;
-  display: flex;
-  flex-direction: column;
+.form-container {
+  max-width: 520px;
+  margin: auto;
+  background: #f7f8fc;
+  padding: 2rem;
+  border-radius: 8px;
 }
 
 label {
+  display: block;
+  margin-top: 1rem;
   font-weight: 600;
-  margin-bottom: 0.4rem;
 }
 
 input,
 textarea {
+  width: 100%;
   padding: 0.6rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-/* Foco */
-input:focus,
-textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-}
-
-/* Estado inválido */
-input.invalido,
-textarea.invalido {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
-}
-
-/* Estado válido */
-input.valido,
-textarea.valido {
-  border-color: #16a34a;
-  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.15);
-}
-
-/* Mensagem de erro */
-.erro {
-  color: #dc2626;
-  font-size: 0.8rem;
   margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-/* Botão */
+input.erro,
+textarea.erro {
+  border-color: #c0392b;
+}
+
+.erro-msg {
+  color: #c0392b;
+  font-size: 0.85rem;
+}
+
+.info {
+  color: #314c53;
+  font-size: 0.85rem;
+}
+
+.acoes {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
 button {
-  padding: 0.7rem;
-  background: #2563eb;
+  background: #314c53;
   color: white;
   border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
+  padding: 0.6rem 1.4rem;
+  border-radius: 4px;
 }
 
-button:hover {
-  background: #1d4ed8;
+button:disabled {
+  background: #999;
 }

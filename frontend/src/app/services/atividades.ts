@@ -1,91 +1,51 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
-
-import { LoaderService } from './loader';
-import { ToastService } from './toast-service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Atividade {
-  _id?: string;
+  id?: string;
   titulo: string;
   descricao: string;
-  data?: Date;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AtividadesService {
 
-  private apiUrl = 'http://localhost:3000/atividades';
+  private apiUrl = 'http://localhost:8080/atividades';
 
-  constructor(
-    private http: HttpClient,
-    private loader: LoaderService,
-    private toast: ToastService
-  ) {}
+  constructor(private http: HttpClient) {}
 
   listar(): Observable<Atividade[]> {
-    this.loader.show();
-
-    return this.http.get<Atividade[]>(this.apiUrl).pipe(
-      finalize(() => this.loader.hide()),
-      catchError(err => {
-        this.toast.error('Erro ao carregar atividades');
-        return throwError(() => err);
-      })
-    );
+    return this.http.get<Atividade[]>(this.apiUrl);
   }
 
   buscarPorId(id: string): Observable<Atividade> {
-  this.loader.show();
-
-  return this.http.get<Atividade>(`${this.apiUrl}/${id}`).pipe(
-    finalize(() => this.loader.hide()),
-    catchError(err => {
-      this.toast.error('Erro ao carregar atividade');
-      return throwError(() => err);
-    })
-  );
-}
-
-  criar(atividade: Atividade): Observable<Atividade> {
-    this.loader.show();
-
-    return this.http.post<Atividade>(this.apiUrl, atividade).pipe(
-      tap(() => this.toast.success('Atividade criada com sucesso')),
-      finalize(() => this.loader.hide()),
-      catchError(err => {
-        this.toast.error('Erro ao criar atividade');
-        return throwError(() => err);
-      })
-    );
+    return this.http.get<Atividade>(`${this.apiUrl}/${id}`);
   }
 
-  atualizar(id: string, atividade: Atividade): Observable<Atividade> {
-    this.loader.show();
-
-    return this.http.put<Atividade>(`${this.apiUrl}/${id}`, atividade).pipe(
-      tap(() => this.toast.success('Atividade atualizada com sucesso')),
-      finalize(() => this.loader.hide()),
-      catchError(err => {
-        this.toast.error('Erro ao atualizar atividade');
-        return throwError(() => err);
-      })
-    );
+  criar(atividade: Atividade): Observable<void> {
+    return this.http.post<void>(this.apiUrl, atividade);
   }
 
-  remover(id: string): Observable<void> {
-    this.loader.show();
+  atualizar(id: string, atividade: Atividade): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, atividade);
+  }
 
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
-      tap(() => this.toast.success('Atividade removida')),
-      finalize(() => this.loader.hide()),
-      catchError(err => {
-        this.toast.error('Erro ao remover atividade');
-        return throwError(() => err);
-      })
+  excluir(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // ✅ MÉTODO QUE FALTAVA
+  validarTitulo(titulo: string, id?: string): Observable<boolean> {
+    let params = new HttpParams().set('titulo', titulo);
+
+    if (id) {
+      params = params.set('id', id);
+    }
+
+    return this.http.get<boolean>(
+      `${this.apiUrl}/validar-titulo`,
+      { params }
     );
   }
 }

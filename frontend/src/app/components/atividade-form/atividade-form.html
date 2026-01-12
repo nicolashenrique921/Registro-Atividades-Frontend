@@ -1,58 +1,58 @@
-<form class="form" (ngSubmit)="salvar()" novalidate>
+<div class="form-container">
 
-  <!-- TÍTULO -->
-  <div class="campo">
-  <label for="titulo">Título</label>
+  <h2>{{ id ? 'Editar atividade' : 'Nova atividade' }}</h2>
 
-  <input
-    id="titulo"
-    type="text"
-    [(ngModel)]="atividade.titulo"
-    name="titulo"
-    (blur)="tituloTouched = true"
-    [class.invalido]="(tituloTouched || submitted) && tituloInvalido()"
-    [class.valido]="tituloTouched && !tituloInvalido()"
-    placeholder="Ex: Estudar Angular"
-  />
+  <form (ngSubmit)="salvar()">
 
-  @if ((tituloTouched || submitted) && tituloInvalido()) {
-    <small class="erro">
-      O título deve ter entre {{ LIMITES.tituloMin }} e {{ LIMITES.tituloMax }} caracteres.
-    </small>
-  }
+    <!-- TÍTULO -->
+    <label for="titulo">Título</label>
+    <input
+      id="titulo"
+      type="text"
+      name="titulo"
+      [(ngModel)]="atividade.titulo"
+      (blur)="tituloTouched = true; validarTitulo()"
+      [class.erro]="tituloInvalido || tituloDuplicado"
+      placeholder="Ex: Reunião com equipe"
+    />
+
+    @if (tituloInvalido) {
+      <small class="erro-msg">Título é obrigatório.</small>
+    }
+
+    @if (validandoTitulo) {
+      <small class="info">Validando título...</small>
+    }
+
+    @if (tituloDuplicado) {
+      <small class="erro-msg">Título já existe.</small>
+    }
+
+    <!-- DESCRIÇÃO -->
+    <label for="descricao">Descrição</label>
+    <textarea
+      id="descricao"
+      name="descricao"
+      [(ngModel)]="atividade.descricao"
+      (blur)="descricaoTouched = true"
+      placeholder="Descreva a atividade..."
+    ></textarea>
+
+    @if (descricaoInvalida) {
+      <small class="erro-msg">Máximo de 500 caracteres.</small>
+    }
+
+    <!-- AÇÕES -->
+    <div class="acoes">
+      <button
+        type="submit"
+        [disabled]="salvando || tituloDuplicado || validandoTitulo"
+      >
+        {{ salvando ? 'Salvando...' : 'Salvar' }}
+      </button>
+
+      <a routerLink="/atividades">Cancelar</a>
+    </div>
+
+  </form>
 </div>
-
-  <!-- DESCRIÇÃO -->
-  <div class="campo">
-  <label for="descricao">Descrição</label>
-
-  <textarea
-    id="descricao"
-    [(ngModel)]="atividade.descricao"
-    name="descricao"
-    rows="4"
-    (blur)="descricaoTouched = true"
-    [class.invalido]="descricaoTouched && descricaoInvalida()"
-    [class.valido]="descricaoTouched && !descricaoInvalida()"
-    placeholder="Descreva a atividade (opcional)"
-  ></textarea>
-
-  @if (descricaoTouched && descricaoInvalida()) {
-    <small class="erro">
-      A descrição pode ter no máximo {{ LIMITES.descricaoMax }} caracteres.
-    </small>
-  }
-</div>
-
-  <!-- AÇÕES -->
-  <div class="acoes">
-    <button type="submit" class="salvar">
-      {{ id ? 'Atualizar' : 'Salvar' }}
-    </button>
-
-    <a routerLink="/atividades" class="cancelar">
-      Cancelar
-    </a>
-  </div>
-
-</form>

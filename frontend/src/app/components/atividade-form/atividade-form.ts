@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 
-import { ToastService } from '../../services/toast-service';
 import { AtividadesService, Atividade } from '../../services/atividades';
+import { ToastService } from '../../services/toast-service';
 
 @Component({
   selector: 'app-atividade-form',
@@ -21,17 +20,15 @@ export class AtividadeForm implements OnInit {
   };
 
   id?: string;
+  salvando = false;
 
-  submitted = false;
-
+  // UX
   tituloTouched = false;
   descricaoTouched = false;
 
-  readonly LIMITES = {
-    tituloMin: 3,
-    tituloMax: 60,
-    descricaoMax: 300
-  };
+  // Validação assíncrona
+  tituloDuplicado = false;
+  validandoTitulo = false;
 
   constructor(
     private service: AtividadesService,
@@ -43,57 +40,75 @@ export class AtividadeForm implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id') ?? undefined;
 
-    if (this.id) {
-      this.service.listar().subscribe({
-        next: atividades => {
-          const encontrada = atividades.find(a => a._id === this.id);
-          if (encontrada) this.atividade = encontrada;
-        },
-        error: () => this.toast.error('Erro ao carregar atividade.')
-      });
+    const atividadeResolvida = this.route.snapshot.data['atividade'];
+    if (atividadeResolvida) {
+      this.atividade = atividadeResolvida;
     }
   }
 
-  salvar() {
-    this.submitted = true;
+  get tituloInvalido() {
+    return this.tituloTouched && !this.atividade.titulo.trim();
+  }
 
-    if (!this.formValido()) {
+  get descricaoInvalida() {
+    return this.descricaoTouched && this.atividade.descricao.length > 500;
+  }
+
+  validarTitulo() {
+    if (!this.atividade.titulo.trim()) return;
+
+    this.validandoTitulo = true;
+    this.tituloDuplicado = false;
+
+    this.service.validarTitulo(this.atividade.titulo, this.id).subscribe({
+      next: duplicado => {
+        this.tituloDuplicado = duplicado;
+        this.validandoTitulo = false;
+      },
+      error: () => {
+        this.validandoTitulo = false;
+      }
+    });
+  }
+
+  salvar() {
+    this.tituloTouched = true;
+    this.descricaoTouched = true;
+
+    if (
+      this.tituloInvalido ||
+      this.descricaoInvalida ||
+      this.tituloDuplicado
+    ) {
       this.toast.error('Corrija os erros antes de salvar.');
       return;
     }
 
-    const operacao = this.id
+    this.salvando = true;
+
+    const request$ = this.id
       ? this.service.atualizar(this.id, this.atividade)
       : this.service.criar(this.atividade);
 
-    operacao.subscribe({
+    request$.subscribe({
       next: () => {
         this.toast.success(
-          this.id
-            ? 'Atividade atualizada com sucesso!'
-            : 'Atividade registrada com sucesso!'
+          this.id ? 'Atividade atualizada!' : 'Atividade criada!'
         );
         this.router.navigate(['/atividades']);
       },
-      error: () => this.toast.error('Erro ao salvar atividade.')
+      error: () => {
+        this.toast.error('Erro ao salvar.');
+        this.salvando = false;
+      }
     });
   }
 
-  // ---------- Validações ----------
-
-  tituloInvalido(): boolean {
-    const t = this.atividade.titulo.trim();
+  // 🔒 Usado pelo CanDeactivate
+  podeSair(): boolean {
     return (
-      t.length < this.LIMITES.tituloMin ||
-      t.length > this.LIMITES.tituloMax
+      !this.atividade.titulo ||
+      confirm('Você tem alterações não salvas. Deseja sair?')
     );
-  }
-
-  descricaoInvalida(): boolean {
-    return this.atividade.descricao.length > this.LIMITES.descricaoMax;
-  }
-
-  formValido(): boolean {
-    return !this.tituloInvalido() && !this.descricaoInvalida();
   }
 }
