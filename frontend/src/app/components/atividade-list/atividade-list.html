@@ -1,66 +1,36 @@
-<section class="lista-container">
+<section class="container">
+  <header>
+    <input
+      type="text"
+      placeholder="Buscar atividade..."
+      [formControl]="busca"
+    />
 
-  <header class="topo">
-    <h2>Atividades</h2>
-
-    <a routerLink="/atividades/nova" class="novo">
-      Nova atividade
-    </a>
+    <select [formControl]="ordenacao">
+      <option value="data">Mais recentes</option>
+      <option value="titulo">Título</option>
+    </select>
   </header>
 
-  @if (atividades.length === 0) {
-    <p class="vazio">Nenhuma atividade cadastrada.</p>
-  }
-
-  <ul class="lista">
-    @for (atividade of atividades; track atividade._id) {
-      <li class="item">
-        <div class="conteudo">
-          <strong>{{ atividade.titulo }}</strong>
-          <p>{{ atividade.descricao }}</p>
-        </div>
-
-        <div class="acoes">
-          <a
-            [routerLink]="['/atividades/editar', atividade._id]"
-            class="editar"
-          >
-            Editar
-          </a>
-
-          <button
-            class="remover"
-            (click)="abrirConfirmacao(atividade)"
-          >
-            Remover
-          </button>
-        </div>
-      </li>
-    }
-  </ul>
-
-</section>
-
-<!-- MODAL CONFIRMAÇÃO -->
-@if (confirmarExclusao && atividadeSelecionada) {
-  <div class="overlay">
-    <div class="modal">
-      <h3>Confirmar exclusão</h3>
-
-      <p>
-        Deseja realmente excluir a atividade
-        <strong>{{ atividadeSelecionada.titulo }}</strong>?
-      </p>
-
-      <div class="acoes-modal">
-        <button class="cancelar" (click)="cancelar()">
-          Cancelar
-        </button>
-
-        <button class="confirmar" (click)="confirmar()">
-          Excluir
-        </button>
-      </div>
+  @if (carregando()) {
+    <div class="skeleton-list">
+      @for (_ of [1,2,3,4,5]; track $index) {
+        <div class="skeleton"></div>
+      }
     </div>
-  </div>
-}
+  } @else {
+    <ul>
+      @for (atividade of atividades(); track atividade.id) {
+        <li @fade>
+          <div>
+            <h3>{{ atividade.titulo }}</h3>
+            <p>{{ atividade.descricao }}</p>
+          </div>
+          <button class="btn btn-danger"
+          (click)="confirmarRemocao(atividade.id)"> Excluir</button>
+
+        </li>
+      }
+    </ul>
+  }
+</section>

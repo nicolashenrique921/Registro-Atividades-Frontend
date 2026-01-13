@@ -1,76 +1,30 @@
-form {
+.container {
   max-width: 500px;
-  margin: 2rem auto;
+  margin: auto;
+  padding: 1rem;
+}
+
+form {
+  background: var(--card);
   padding: 1.5rem;
-  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.campo {
-  margin-bottom: 1.2rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-weight: 600;
-}
-
-input,
-textarea {
+input, textarea {
   width: 100%;
-  padding: 0.6rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
+  padding: .6rem;
+  margin-bottom: .5rem;
 }
 
-input:focus,
-textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-}
-
-.invalido {
-  border-color: #dc2626;
-  background: #fef2f2;
-}
-
-.erro {
-  color: #dc2626;
-  font-size: 0.8rem;
-}
-
-.acoes {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.error {
+  color: var(--danger);
+  font-size: .8rem;
 }
 
 button {
-  padding: 0.6rem 1.2rem;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #1d4ed8;
-}
-
-.cancelar {
-  text-decoration: none;
-  color: #374151;
-}
-
-.cancelar:hover {
-  text-decoration: underline;
+  margin-top: 1rem;
+  width: 100%;
+  padding: .6rem;
+  background: var(--primary);
+  color: white;
 }

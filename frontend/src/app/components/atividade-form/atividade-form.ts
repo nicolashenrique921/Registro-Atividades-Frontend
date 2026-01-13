@@ -1,93 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
-import { AtividadesService, Atividade } from '../../services/atividades';
+import { AtividadesService } from '../../services/atividades';
 import { ToastService } from '../../services/toast-service';
 
 @Component({
   selector: 'app-atividade-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './atividade-form.html',
   styleUrl: './atividade-form.css'
 })
-export class AtividadeForm implements OnInit {
+export class AtividadeForm {
 
-  form!: FormGroup;
-  id?: string;
-  submetido = false;
+  private fb = inject(FormBuilder);
+  private service = inject(AtividadesService);
+  private router = inject(Router);
+  private toast = inject(ToastService);
 
-  constructor(
-    private fb: FormBuilder,
-    private service: AtividadesService,
-    private toast: ToastService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  submitted = false;
 
-  ngOnInit(): void {
-    this.form = this.fb.group({
-      titulo: ['', [Validators.required, Validators.minLength(3)]],
-      descricao: ['', [Validators.required, Validators.minLength(10)]]
-    });
+  form = this.fb.nonNullable.group({
+    titulo: ['', [Validators.required, Validators.minLength(3)]],
+    descricao: ['', [Validators.required, Validators.minLength(5)]]
+  });
 
-    this.id = this.route.snapshot.paramMap.get('id') ?? undefined;
+  salvar() {
+    this.submitted = true;
 
-    if (this.id) {
-      this.service.listar().subscribe({
-        next: atividades => {
-          const atividade = atividades.find(a => a._id === this.id);
-          if (atividade) {
-            this.form.patchValue({
-              titulo: atividade.titulo,
-              descricao: atividade.descricao
-            });
-          }
-        },
-        error: () => this.toast.error('Erro ao carregar atividade.')
-      });
-    }
-  }
+    if (this.form.invalid) return;
 
-  // 🔹 Getters tipados (RESOLVEM erro 4111)
-  get titulo() {
-    return this.form.get('titulo');
-  }
-
-  get descricao() {
-    return this.form.get('descricao');
-  }
-
-  salvar(): void {
-    this.submetido = true;
-
-    if (this.form.invalid) {
-      this.toast.error('Corrija os erros do formulário.');
-      return;
-    }
-
-    const atividade: Atividade = this.form.value;
-
-    const request = this.id
-      ? this.service.atualizar(this.id, atividade)
-      : this.service.criar(atividade);
-
-    request.subscribe({
+    this.service.criar(this.form.getRawValue()).subscribe({
       next: () => {
-        this.toast.success(
-          this.id
-            ? 'Atividade atualizada com sucesso!'
-            : 'Atividade criada com sucesso!'
-        );
+        this.toast.success('Atividade salva!');
         this.router.navigate(['/atividades']);
       },
-      error: () => this.toast.error('Erro ao salvar atividade.')
+      error: () => this.toast.error('Erro ao salvar')
     });
   }
 }

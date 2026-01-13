@@ -1,64 +1,20 @@
-<form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+<section class="container">
+  <form [formGroup]="form" (ngSubmit)="salvar()">
 
-  <h2>{{ id ? 'Editar atividade' : 'Nova atividade' }}</h2>
+    <h2>Nova Atividade</h2>
 
-  <!-- TÍTULO -->
-  <div class="campo">
-    <label for="titulo">Título</label>
+    <label>Título</label>
+    <input type="text" formControlName="titulo">
+    @if (submitted && form.controls['titulo'].invalid) {
+      <small class="error">Título inválido</small>
+    }
 
-    <input
-      id="titulo"
-      type="text"
-      formControlName="titulo"
-      placeholder="Digite o título"
-      [class.invalido]="titulo?.invalid && (titulo?.touched || submetido)"
-    />
+    <label>Descrição</label>
+    <textarea rows="4" formControlName="descricao"></textarea>
+    @if (submitted && form.controls['descricao'].invalid) {
+      <small class="error">Descrição inválida</small>
+    }
 
-    <small class="erro"
-      *ngIf="titulo?.errors && (titulo?.touched || submetido)"
-    >
-      <span *ngIf="titulo?.errors?.['required']">
-        O título é obrigatório.
-      </span>
-      <span *ngIf="titulo?.errors?.['minlength']">
-        Mínimo de 3 caracteres.
-      </span>
-    </small>
-  </div>
-
-  <!-- DESCRIÇÃO -->
-  <div class="campo">
-    <label for="descricao">Descrição</label>
-
-    <textarea
-      id="descricao"
-      rows="4"
-      formControlName="descricao"
-      placeholder="Descreva a atividade"
-      [class.invalido]="descricao?.invalid && (descricao?.touched || submetido)"
-    ></textarea>
-
-    <small class="erro"
-      *ngIf="descricao?.errors && (descricao?.touched || submetido)"
-    >
-      <span *ngIf="descricao?.errors?.['required']">
-        A descrição é obrigatória.
-      </span>
-      <span *ngIf="descricao?.errors?.['minlength']">
-        Mínimo de 10 caracteres.
-      </span>
-    </small>
-  </div>
-
-  <!-- AÇÕES -->
-  <div class="acoes">
-    <button type="submit">
-      {{ id ? 'Atualizar' : 'Salvar' }}
-    </button>
-
-    <a routerLink="/atividades" class="cancelar">
-      Cancelar
-    </a>
-  </div>
-
-</form>
+    <button type="submit">Salvar</button>
+  </form>
+</section>

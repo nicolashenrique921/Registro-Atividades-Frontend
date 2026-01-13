@@ -1,124 +1,55 @@
-.lista-container {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 1rem;
+.container {
+  padding: 1.5rem;
+  max-width: 900px;
+  margin: auto;
+  color: var(--text);
 }
 
-.topo {
+header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.novo {
-  text-decoration: none;
-  background: #2563eb;
-  color: #fff;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+input, select {
+  padding: .6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
 }
 
-.novo:hover {
-  background: #1d4ed8;
-}
-
-.vazio {
-  text-align: center;
-  color: #6b7280;
-}
-
-.lista {
+ul {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
-.item {
+li {
+  background: var(--card);
+  margin-bottom: .8rem;
+  padding: 1rem;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 0.8rem;
-  margin-bottom: 0.6rem;
-  background: #ffffff;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.conteudo strong {
-  display: block;
-  font-size: 1rem;
-}
-
-.conteudo p {
-  margin: 0.3rem 0 0;
-  color: #374151;
-}
-
-.acoes {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.editar {
-  text-decoration: none;
-  color: #2563eb;
-  font-size: 0.9rem;
-}
-
-.editar:hover {
-  text-decoration: underline;
-}
-
-.remover {
-  background: #dc2626;
-  color: #fff;
+button {
+  background: transparent;
   border: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
   cursor: pointer;
+  font-size: 1.2rem;
 }
 
-.remover:hover {
-  background: #b91c1c;
-}
-
-/* MODAL */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal {
-  background: #fff;
-  padding: 1.5rem;
+/* Skeleton */
+.skeleton-list .skeleton {
+  height: 70px;
+  background: linear-gradient(90deg, #333 25%, #444 37%, #333 63%);
+  animation: pulse 1.4s infinite;
   border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
+  margin-bottom: .8rem;
 }
 
-.acoes-modal {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.cancelar {
-  background: #e5e7eb;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-}
-
-.confirmar {
-  background: #dc2626;
-  color: #fff;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+@keyframes pulse {
+  0% { background-position: 0% }
+  100% { background-position: 100% }
 }

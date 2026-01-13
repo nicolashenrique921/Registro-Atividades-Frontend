@@ -1,63 +1,68 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
-import { AtividadesService, Atividade } from '../../services/atividades';
+import { AtividadesService } from '../../services/atividades';
 import { ToastService } from '../../services/toast-service';
+import { Atividade } from '../../models/atividade-model';
 
 @Component({
   selector: 'app-atividade-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
   templateUrl: './atividade-list.html',
   styleUrl: './atividade-list.css'
 })
-export class AtividadeList implements OnInit {
+export class AtividadeList {
 
-  atividades: Atividade[] = [];
+  private service = inject(AtividadesService);
+  private toast = inject(ToastService);
 
-  confirmarExclusao = false;
-  atividadeSelecionada?: Atividade;
+  atividades = signal<Atividade[]>([]);
+  carregando = signal(true);
 
-  constructor(
-    private service: AtividadesService,
-    private toast: ToastService
-  ) {}
+  busca = new FormControl('');
+  ordenacao = new FormControl<'data' | 'titulo'>('data');
 
-  ngOnInit(): void {
-    this.buscar();
-  }
-
-  buscar(): void {
-    this.service.listar().subscribe({
-      next: data => this.atividades = data,
-      error: () => this.toast.error('Erro ao carregar atividades.')
+  constructor() {
+    effect(() => {
+      this.carregar();
     });
   }
 
-  abrirConfirmacao(atividade: Atividade): void {
-    this.atividadeSelecionada = atividade;
-    this.confirmarExclusao = true;
-  }
+  carregar(): void {
+    this.carregando.set(true);
 
-  cancelar(): void {
-    this.confirmarExclusao = false;
-    this.atividadeSelecionada = undefined;
-  }
-
-  confirmar(): void {
-    if (!this.atividadeSelecionada?._id) return;
-
-    this.service.remover(this.atividadeSelecionada._id).subscribe({
-      next: () => {
-        this.toast.success('Atividade removida com sucesso!');
-        this.buscar();
-        this.cancelar();
+    this.service.listar({
+      titulo: this.busca.value ?? '',
+      sort: this.ordenacao.value ?? 'data'
+    }).subscribe({
+      next: res => {
+        this.atividades.set(res.data);
+        this.carregando.set(false);
       },
       error: () => {
-        this.toast.error('Erro ao remover atividade.');
-        this.cancelar();
+        this.toast.error('Erro ao carregar atividades');
+        this.carregando.set(false);
       }
+    });
+  }
+
+  confirmarRemocao(id: string): void {
+    const confirmado = confirm('Deseja realmente excluir esta atividade?');
+    if (!confirmado) return;
+
+    this.service.deletar(id).subscribe({
+      next: () => {
+        this.toast.success('Atividade removida com sucesso');
+        this.carregar();
+      },
+      error: () => this.toast.error('Erro ao remover atividade')
     });
   }
 }

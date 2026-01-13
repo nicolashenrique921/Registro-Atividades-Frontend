@@ -1,22 +1,18 @@
 import { inject } from '@angular/core';
 import {
-  HttpEvent,
-  HttpHandlerFn,
   HttpInterceptorFn,
+  HttpHandlerFn,
   HttpRequest
 } from '@angular/common/http';
-import { finalize, Observable } from 'rxjs';
+import { finalize } from 'rxjs';
 import { LoaderService } from '../services/loader';
 
 export const loadingInterceptor: HttpInterceptorFn = (
-  req: HttpRequest<unknown>,
+  req: HttpRequest<any>,
   next: HttpHandlerFn
-): Observable<HttpEvent<unknown>> => {
+) => {
+  const loader = inject(LoaderService);
+  loader.show();
 
-  const loaderService = inject(LoaderService);
-  loaderService.show();
-
-  return next(req).pipe(
-    finalize(() => loaderService.hide())
-  );
+  return next(req).pipe(finalize(() => loader.hide()));
 };

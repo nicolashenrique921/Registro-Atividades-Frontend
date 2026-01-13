@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { RouterLink } from '@angular/router';
-import { ToastComponent } from './components/toastcomponent/toastcomponent';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { LoaderComponent } from './components/loader/loader';
+import { ToastComponent } from './components/toastcomponent/toastcomponent';
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,
-     RouterLink,
-     LoaderComponent,
-     ToastComponent],
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    LoaderComponent,
+    ToastComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App { }
+export class App {}
