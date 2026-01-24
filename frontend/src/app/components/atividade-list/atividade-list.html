@@ -1,36 +1,41 @@
-<section class="container">
-  <header>
-    <input
-      type="text"
-      placeholder="Buscar atividade..."
-      [formControl]="busca"
-    />
+<div class="filtros">
+  <input
+    type="text"
+    placeholder="Buscar por título"
+    [(ngModel)]="busca"
+    (input)="buscar()"
+  />
 
-    <select [formControl]="ordenacao">
-      <option value="data">Mais recentes</option>
-      <option value="titulo">Título</option>
-    </select>
-  </header>
+  <button (click)="alterarOrdenacao('data')">Mais recentes</button>
+  <button (click)="alterarOrdenacao('titulo')">Título</button>
+</div>
 
-  @if (carregando()) {
-    <div class="skeleton-list">
-      @for (_ of [1,2,3,4,5]; track $index) {
-        <div class="skeleton"></div>
-      }
-    </div>
-  } @else {
-    <ul>
-      @for (atividade of atividades(); track atividade.id) {
-        <li @fade>
-          <div>
-            <h3>{{ atividade.titulo }}</h3>
-            <p>{{ atividade.descricao }}</p>
-          </div>
-          <button class="btn btn-danger"
-          (click)="confirmarRemocao(atividade.id)"> Excluir</button>
+@if (atividades.length === 0) {
+  <p class="aviso">Nenhuma atividade encontrada.</p>
+}
 
-        </li>
-      }
-    </ul>
+<ul>
+  @for (atividade of atividades; track atividade._id) {
+    <li>
+      <h3>{{ atividade.titulo }}</h3>
+      <p>{{ atividade.descricao }}</p>
+      <small>{{ atividade.data | date:'short' }}</small>
+      <button (click)="remover(atividade._id)">Excluir</button>
+    </li>
   }
-</section>
+</ul>
+
+<div class="paginacao">
+  <button (click)="paginaAnterior()" [disabled]="paginaAtual === 1">
+    Anterior
+  </button>
+
+  <span>Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+
+  <button
+    (click)="proximaPagina()"
+    [disabled]="paginaAtual === totalPaginas"
+  >
+    Próxima
+  </button>
+</div>

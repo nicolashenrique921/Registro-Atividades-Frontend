@@ -1,46 +1,41 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Atividade } from '../models/atividade-model';
-import { Paginacao } from '../models/paginacao-model';
 
-export interface AtividadeFiltro {
-  page?: number;
-  limit?: number;
-  titulo?: string;
-  sort?: 'data' | 'titulo';
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AtividadesService {
 
-  private http = inject(HttpClient);
-  private readonly API = 'http://localhost:3000/atividades';
+  private apiUrl = 'http://localhost:3000/atividades';
 
-  listar(filtro: AtividadeFiltro = {}): Observable<Paginacao<Atividade>> {
-    const params = {
-      page: filtro.page ?? 1,
-      limit: filtro.limit ?? 5,
-      titulo: filtro.titulo ?? '',
-      sort: filtro.sort ?? 'data'
-    };
+  constructor(private http: HttpClient) {}
 
-    return this.http.get<Paginacao<Atividade>>(this.API, { params });
+  listarPaginado(
+    pagina: number,
+    limite: number,
+    busca: string,
+    ordenacao: string
+  ): Observable<{ dados: Atividade[]; total: number }> {
+
+    let params = new HttpParams()
+      .set('page', pagina)
+      .set('limit', limite)
+      .set('search', busca)
+      .set('sort', ordenacao);
+
+    return this.http.get<{ dados: Atividade[]; total: number }>(
+      this.apiUrl,
+      { params }
+    );
   }
 
-  buscarPorId(id: string): Observable<Atividade> {
-    return this.http.get<Atividade>(`${this.API}/${id}`);
+  criar(atividade: Atividade) {
+    return this.http.post<Atividade>(this.apiUrl, atividade);
   }
 
-  criar(payload: Omit<Atividade, 'id'>): Observable<Atividade> {
-    return this.http.post<Atividade>(this.API, payload);
-  }
-
-  atualizar(id: string, payload: Omit<Atividade, 'id'>): Observable<Atividade> {
-    return this.http.put<Atividade>(`${this.API}/${id}`, payload);
-  }
-
-  deletar(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.API}/${id}`);
+  remover(id: string) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

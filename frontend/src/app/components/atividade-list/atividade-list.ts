@@ -1,68 +1,84 @@
-import { Component, signal, inject, effect } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import { AtividadesService } from '../../services/atividades';
-import { ToastService } from '../../services/toast-service';
 import { Atividade } from '../../models/atividade-model';
 
 @Component({
   selector: 'app-atividade-list',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule
+    CommonModule, // @if, @for, date pipe
+    FormsModule   // ngModel
   ],
   templateUrl: './atividade-list.html',
-  styleUrl: './atividade-list.css'
+  styleUrls: ['./atividade-list.css']
 })
-export class AtividadeList {
+export class AtividadeList implements OnInit {
 
-  private service = inject(AtividadesService);
-  private toast = inject(ToastService);
+  atividades: Atividade[] = [];
 
-  atividades = signal<Atividade[]>([]);
-  carregando = signal(true);
+  paginaAtual = 1;
+  limite = 5;
+  totalRegistros = 0;
 
-  busca = new FormControl('');
-  ordenacao = new FormControl<'data' | 'titulo'>('data');
+  busca = '';
+  ordenacao = 'data';
 
-  constructor() {
-    effect(() => {
+  constructor(private service: AtividadesService) {}
+
+  ngOnInit(): void {
+    this.carregar();
+  }
+
+  carregar() {
+    this.service
+      .listarPaginado(
+        this.paginaAtual,
+        this.limite,
+        this.busca,
+        this.ordenacao
+      )
+      .subscribe(res => {
+        this.atividades = res.dados;
+        this.totalRegistros = res.total;
+      });
+  }
+
+  buscar() {
+    this.paginaAtual = 1;
+    this.carregar();
+  }
+
+  alterarOrdenacao(tipo: string) {
+    this.ordenacao = tipo;
+    this.carregar();
+  }
+
+  paginaAnterior() {
+    if (this.paginaAtual > 1) {
+      this.paginaAtual--;
       this.carregar();
-    });
+    }
   }
 
-  carregar(): void {
-    this.carregando.set(true);
-
-    this.service.listar({
-      titulo: this.busca.value ?? '',
-      sort: this.ordenacao.value ?? 'data'
-    }).subscribe({
-      next: res => {
-        this.atividades.set(res.data);
-        this.carregando.set(false);
-      },
-      error: () => {
-        this.toast.error('Erro ao carregar atividades');
-        this.carregando.set(false);
-      }
-    });
+  proximaPagina() {
+    if (this.paginaAtual < this.totalPaginas) {
+      this.paginaAtual++;
+      this.carregar();
+    }
   }
 
-  confirmarRemocao(id: string): void {
-    const confirmado = confirm('Deseja realmente excluir esta atividade?');
-    if (!confirmado) return;
+  get totalPaginas(): number {
+    return Math.ceil(this.totalRegistros / this.limite);
+  }
 
-    this.service.deletar(id).subscribe({
-      next: () => {
-        this.toast.success('Atividade removida com sucesso');
-        this.carregar();
-      },
-      error: () => this.toast.error('Erro ao remover atividade')
+  remover(id?: string) {
+    if (!id) return;
+
+    this.service.remover(id).subscribe(() => {
+      this.carregar();
     });
   }
 }
